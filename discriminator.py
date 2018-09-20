@@ -11,6 +11,7 @@ import torch.nn.functional as F
 
 '''
 base vgg11 fine-tune U_Net : ternausNet 直接借鉴一下，本地使用的基于vgg16的u_net.
+           建议修改成基于vgg11_bn
 '''
 
 class DecoderBlock(nn.Module):
