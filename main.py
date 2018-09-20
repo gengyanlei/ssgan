@@ -15,7 +15,7 @@ from torch.utils import data
 from data_imread import batch_data
 # models
 from generator import generator
-from discriminator import u_net
+from discriminator import discriminator
 # losses
 from losses import Loss_label, Loss_fake, Loss_unlabel
 
@@ -27,9 +27,9 @@ lr_d=1e-4
 power=0.9
 weight_decay=5e-4
 max_iter=20000
-dataset_path=r'**/Dataset/ISPRS_ALL/hdf5/f5.hdf5'
-dataset_nl_path=r'**/Dataset/ISPRS_ALL/hdf5/f2.hdf5'
-save_path=r'**/Pytorch_Code/ALL/ssgan/u_net'
+dataset_path=r'**/Dataset/hdf5/f5.hdf5'
+dataset_nl_path=r'**/Dataset/hdf5/f2.hdf5'
+save_path=r'**/Pytorch_Code/ALL/ssgan/'
 
 loss_s_path=os.path.join(save_path,'loss.npy')
 model_s_path=os.path.join(save_path,'model.pth')
@@ -58,7 +58,7 @@ trainloader_nl_iter=enumerate(trainloader_nl)
 
 ################### build model ###################
 model_g = generator(3)
-model_d = u_net(class_number+1)
+model_d = discriminator(class_number+1)
 
 #### fine-tune ####
 #new_params=model.state_dict()
