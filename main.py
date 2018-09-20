@@ -62,7 +62,7 @@ model_d = discriminator(class_number+1)
 
 #### fine-tune ####
 #new_params=model.state_dict()
-#pretrain_dict=torch.load(r'/home/leilei/LEILEI/Pytorch_Code/Pretrain/model/model.pth')
+#pretrain_dict=torch.load(r'**/model.pth')
 #pretrain_dict={k:v for k,v in pretrain_dict.items() if k in new_params and v.size()==new_params[k].size()}# default k in m m.keys
 #new_params.update(pretrain_dict)
 #model.load_state_dict(new_params)
