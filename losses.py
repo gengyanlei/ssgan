@@ -26,6 +26,7 @@ def Loss_label(pred,label):
     l_lab = output_before_softmax_lab[np.arange(label_.shape[0]),label_]
     # compute two value
     loss_lab = -torch.mean(l_lab) + torch.mean(log_sum_exp(output_before_softmax_lab))
+    
     return loss_lab
 
 def Loss_fake(pred):
@@ -37,6 +38,7 @@ def Loss_fake(pred):
     output_before_softmax_gen = pred.transpose(1,2).transpose(2,3).reshape([-1,shape[1]])# [n*h*w, c]
     l_gen = log_sum_exp(output_before_softmax_gen)
     loss_gen = torch.mean(F.softplus(l_gen))
+    
     return loss_gen
 
 def Loss_unlabel(pred):
@@ -48,7 +50,6 @@ def Loss_unlabel(pred):
     output_before_softmax_unl = pred.transpose(1,2).transpose(2,3).reshape([-1,shape[1]])# [n*h*w, c]
     
     l_unl = log_sum_exp(output_before_softmax_unl)
-    
     loss_unl = -torch.mean(l_unl) + torch.mean(F.softplus(l_unl))
     
     return loss_unl
