@@ -31,9 +31,9 @@ dataset_path=r'**/Dataset/hdf5/f5.hdf5'
 dataset_nl_path=r'**/Dataset/hdf5/f2.hdf5'
 save_path=r'**/Pytorch_Code/ALL/ssgan/'
 
-loss_s_path=os.path.join(save_path,'loss.npy')
+#loss_s_path=os.path.join(save_path,'loss.npy')
 model_s_path=os.path.join(save_path,'model.pth')
-loss_s_figure=os.path.join(save_path,'loss.tif')
+#loss_s_figure=os.path.join(save_path,'loss.tif')
 model_g_spath=os.path.join(save_path,'g/model_g.pth')
 
 ################### update lr ###################
@@ -75,11 +75,90 @@ model_d.cuda()
 
 ################### optimizer ###################
 optimizer_g=torch.optim.Adam(model_g.parameters(),lr=lr_g,betas=(0.9,0.99),weight_decay=weight_decay)
-optimizer_g.zero_grad()
+#optimizer_g.zero_grad()
 
 optimizer_d=torch.optim.Adam(model_d.parameters(),lr=lr_d,betas=(0.9,0.99),weight_decay=weight_decay)
-optimizer_d.zero_grad()
+#optimizer_d.zero_grad()
 
 ################### iter train ###################
+for iters in range(max_iter):
+    loss_g_v=0
+    loss_d_v=0
+    
+    ####### train D ##################
+    optimizer_d.zero_grad()
+    adjust_lr(optimizer_d,lr_d,iters,max_iter,power)
+
+    # labeled data
+    try:
+        _,batch=next(trainloader_iter)
+    except:
+        trainloader_iter=enumerate(trainloader)
+        _,batch=next(trainloader_iter)
+    
+    images,labels=batch
+    images=Variable(images).cuda()
+    labels=Variable(labels).cuda()
+    
+    # unlabeled data
+    try:
+        _,batch_nl=next(trainloader_nl_iter)
+    except:
+        trainloader_nl_iter=enumerate(trainloader_nl)
+        _,batch_nl=next(trainloader_nl_iter)
+    
+    images_nl=batch_nl
+    images_nl=Variable(images_nl).cuda()
+    if images.shape[0] != images_nl.shape[0]:
+        continue
+    # noise data
+    noise = torch.rand([images.shape[0],50*50]).uniform_().cuda()
+    # predict
+    pred_labeled = model_d(images)
+    pred_unlabel = model_d(images_nl)
+    pred_fake    = model_d( model_g(noise) )
+    # compute loss
+    loss_labeled = Loss_label1(pred_labeled,labels)
+    loss_unlabel = Loss_unlabel1(pred_unlabel)
+    loss_fake    = Loss_fake1(pred_fake)
+    
+    loss_d       = loss_labeled + 0.5*loss_fake + 0.5*loss_unlabel
+    loss_d_v += loss_d.data.cpu().numpy().item()
+    loss_d.backward()
+    optimizer_d.step()
+    
+    ####### train G ##################
+    optimizer_g.zero_grad()
+    adjust_lr(optimizer_g,lr_g,iters,max_iter,power)
+    # predict
+    pred_fake    = model_d( model_g(noise) )
+    loss_g    = -Loss_fake1(pred_fake)
+    loss_g_v += loss_g.data.cpu().numpy().item()
+    loss_g.backward()
+    optimizer_g.step()
+    
+    # output loss value
+    print('iter=%d , loss_g=%.2f , loss_d=%.2f'%(iters,loss_g_v,loss_d_v))
+    # save model
+    if iters%1000==0 and iters!=0:
+        # test image
+#        img=Image.open(os.path.join(test_path,names[i]))
+#        r,g,b=img.split()
+#        img=Image.merge('RGB',(b,g,r))
+#        img_=img_transform(img)
+#        img_=torch.unsqueeze(img_,dim=0)
+#        image=Variable(img_).cuda()
+#        predict=model(image)
+#        P=torch.max(predict,1)[1].cuda().data.cpu().numpy()[0]
+#        P=np.uint8(P)
+#        cv2.imwrite(os.path.join(pre_path,names[i]),P)
+        
+        torch.save(model_d.state_dict(),model_s_path)
+        torch.save(model_g.state_dict(),model_g_spath)
+torch.save(model_d.state_dict(),model_s_path)
+torch.save(model_g.state_dict(),model_g_spath)
+
+
+
 
 
