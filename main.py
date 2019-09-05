@@ -118,9 +118,9 @@ for iters in range(max_iter):
     pred_unlabel = model_d(images_nl)
     pred_fake    = model_d( model_g(noise) )
     # compute loss
-    loss_labeled = Loss_label1(pred_labeled,labels)
-    loss_unlabel = Loss_unlabel1(pred_unlabel)
-    loss_fake    = Loss_fake1(pred_fake)
+    loss_labeled = Loss_label(pred_labeled,labels)
+    loss_unlabel = Loss_unlabel(pred_unlabel)
+    loss_fake    = Loss_fake(pred_fake)
     
     loss_d       = loss_labeled + 0.5*loss_fake + 0.5*loss_unlabel
     loss_d_v += loss_d.data.cpu().numpy().item()
