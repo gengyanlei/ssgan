@@ -132,7 +132,7 @@ for iters in range(max_iter):
     adjust_lr(optimizer_g,lr_g,iters,max_iter,power)
     # predict
     pred_fake    = model_d( model_g(noise) )
-    loss_g    = -Loss_fake1(pred_fake)
+    loss_g    = -Loss_fake(pred_fake)
     loss_g_v += loss_g.data.cpu().numpy().item()
     loss_g.backward()
     optimizer_g.step()
