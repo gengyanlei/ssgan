@@ -8,3 +8,5 @@ Python：3.5 ；  Pytorch：0.40
 由于论文未给出代码，并且此论文为“分割”SEMI-GAN，与分类有相似之处，但仍有巨大区别，在参考一些分类SEMI-GAN后，复现此半监督分割GAN论文代码。
 
 若有问题，请及时指出。谢谢。
+
+注意：测试时请添加model.eval() and with torch.no_grad(): 
