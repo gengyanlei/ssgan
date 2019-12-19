@@ -10,3 +10,7 @@ Python：3.5 ；  Pytorch：0.40
 若有问题，请及时指出。谢谢。
 
 注意：测试时请添加model.eval() and with torch.no_grad(): 
+
+分享 建筑物语义分割数据集： building-segmentation-dataset
+
+https://github.com/gengyanlei/build_segmentation_dataset
