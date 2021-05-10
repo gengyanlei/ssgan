@@ -20,5 +20,6 @@ Semi Supervised Semantic Segmentation Using Generative Adversarial Network ; Pyt
 + [Semi Supervised Semantic Segmentation Using Generative Adversarial Network](https://arxiv.org/abs/1703.09695)
 
 ### Other
++ [segmentation_pytorch](https://github.com/gengyanlei/segmentation_pytorch)
 + [building-segmentation-dataset](https://github.com/gengyanlei/build_segmentation_dataset)
 + [fire-smoke-detect-dataset](https://github.com/gengyanlei/fire-detect-yolov4)
